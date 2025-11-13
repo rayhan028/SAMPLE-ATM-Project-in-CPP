@@ -24,7 +24,7 @@ private:
     static constexpr double MAX_WITHDRAWAL = 20000.0;
     static constexpr int LOCKOUT_SECONDS = 30;
 
-    // Helper to add timestamp to transactions
+    // add timestamp to transactions
     [[nodiscard]] std::string getCurrentTimestamp() const noexcept {
         auto now = std::chrono::system_clock::now();
         auto time = std::chrono::system_clock::to_time_t(now);
@@ -65,36 +65,36 @@ public:
     // Update mobile number with validation
     bool updateMobile(const std::string& old_mobile, const std::string& new_mobile) {
         if (old_mobile != mobile_no_) {
-            std::cout << "\n❌ Incorrect old mobile number!\n";
+            std::cout << "\nIncorrect old mobile number!\n";
             return false;
         }
 
         if (new_mobile.length() != 10) {
-            std::cout << "\n❌ Invalid mobile number! Must be 10 digits.\n";
+            std::cout << "\nInvalid mobile number! Must be 10 digits.\n";
             return false;
         }
 
         mobile_no_ = new_mobile;
         addTransaction("Mobile number updated");
-        std::cout << "\n✓ Successfully updated mobile number.\n";
+        std::cout << "\nSuccessfully updated mobile number.\n";
         return true;
     }
 
     // Withdraw cash with proper validation
     bool withdrawCash(double amount) {
         if (amount <= 0) {
-            std::cout << "\n❌ Invalid amount! Must be positive.\n";
+            std::cout << "\nInvalid amount! Must be positive.\n";
             return false;
         }
 
         if (amount > balance_) {
-            std::cout << "\n❌ Insufficient balance!\n";
+            std::cout << "\nInsufficient balance!\n";
             std::cout << "Available balance: ₹" << std::fixed << std::setprecision(2) << balance_ << "\n";
             return false;
         }
 
         if (amount > MAX_WITHDRAWAL) {
-            std::cout << "\n❌ Withdrawal limit exceeded!\n";
+            std::cout << "\n Withdrawal limit exceeded!\n";
             std::cout << "Maximum withdrawal per transaction: ₹" << MAX_WITHDRAWAL << "\n";
             return false;
         }
@@ -113,7 +113,7 @@ public:
     // Deposit cash
     bool depositCash(double amount) {
         if (amount <= 0) {
-            std::cout << "\n❌ Invalid amount! Must be positive.\n";
+            std::cout << "\nInvalid amount! Must be positive.\n";
             return false;
         }
 
@@ -122,7 +122,7 @@ public:
         ss << "Deposited ₹" << std::fixed << std::setprecision(2) << amount;
         addTransaction(ss.str());
 
-        std::cout << "\n✓ Amount deposited successfully\n";
+        std::cout << "\nAmount deposited successfully\n";
         std::cout << "New balance: ₹" << std::fixed << std::setprecision(2) << balance_ << "\n";
         return true;
     }
@@ -133,9 +133,7 @@ public:
     }
 
     void displayUserDetails() const {
-        std::cout << "\n╔════════════════════════════════╗\n";
         std::cout << "║       USER DETAILS             ║\n";
-        std::cout << "╚════════════════════════════════╝\n";
         std::cout << "Account No : " << account_no_ << "\n";
         std::cout << "Name       : " << name_ << "\n";
         std::cout << "Balance    : ₹" << std::fixed << std::setprecision(2) << balance_ << "\n";
@@ -144,9 +142,7 @@ public:
     }
 
     void displayTransactionHistory() const {
-        std::cout << "\n╔════════════════════════════════════════════════════╗\n";
         std::cout << "║           TRANSACTION HISTORY                      ║\n";
-        std::cout << "╚════════════════════════════════════════════════════╝\n";
 
         if (transaction_history_.empty()) {
             std::cout << "No transactions yet.\n";
@@ -160,13 +156,13 @@ public:
     void lockAccount() {
         is_locked_ = true;
         addTransaction("Account locked");
-        std::cout << "\n🔒 Account has been locked for security.\n";
+        std::cout << "\n Account has been locked for security.\n";
     }
 
     void unlockAccount() {
         is_locked_ = false;
         pin_attempts_ = 0;
-        std::cout << "\n🔓 Account unlocked. You may try again.\n";
+        std::cout << "\n Account unlocked. You may try again.\n";
     }
 
     void incrementPinAttempts() {
@@ -182,7 +178,7 @@ public:
 
     // Static method to wait for lockout period
     static void waitForLockout() {
-        std::cout << "\n⏳ Please wait " << LOCKOUT_SECONDS << " seconds before retrying...\n";
+        std::cout << "\n Please wait " << LOCKOUT_SECONDS << " seconds before retrying...\n";
         std::this_thread::sleep_for(std::chrono::seconds(LOCKOUT_SECONDS));
     }
 };
@@ -210,9 +206,7 @@ private:
     }
 
     void displayMainMenu() const {
-        std::cout << "\n╔════════════════════════════════╗\n";
         std::cout << "║       ATM MAIN MENU            ║\n";
-        std::cout << "╚════════════════════════════════╝\n";
         std::cout << "1. Check Balance\n";
         std::cout << "2. Withdraw Cash\n";
         std::cout << "3. Deposit Cash\n";
@@ -227,10 +221,7 @@ private:
     bool authenticate() {
         long int account_no;
         int pin;
-
-        std::cout << "\n╔════════════════════════════════╗\n";
         std::cout << "║      WELCOME TO ATM            ║\n";
-        std::cout << "╚════════════════════════════════╝\n";
         std::cout << "Enter Account Number: ";
 
         if (!(std::cin >> account_no)) {
@@ -256,7 +247,7 @@ private:
 
         int remaining = 3 - user_->getPinAttempts();
         if (remaining > 0) {
-            std::cout << "⚠️  " << remaining << " attempt(s) remaining.\n";
+            std::cout << " " << remaining << " attempt(s) remaining.\n";
         }
 
         return false;
@@ -267,7 +258,7 @@ private:
 
         while (true) {
             if (user_->isLocked()) {
-                std::cout << "\n🔒 Account is locked. Please contact support.\n";
+                std::cout << "\n Account is locked. Please contact support.\n";
                 pauseScreen();
                 return;
             }
@@ -277,7 +268,7 @@ private:
 
             if (!(std::cin >> choice)) {
                 clearInputBuffer();
-                std::cout << "\n❌ Invalid input! Please enter a number.\n";
+                std::cout << "\n Invalid input! Please enter a number.\n";
                 pauseScreen();
                 clearInputBuffer();
                 continue;
@@ -297,7 +288,7 @@ private:
                     if (std::cin >> amount) {
                         user_->withdrawCash(amount);
                     } else {
-                        std::cout << "\n❌ Invalid amount!\n";
+                        std::cout << "\n Invalid amount!\n";
                     }
                     clearInputBuffer();
                     pauseScreen();
@@ -309,7 +300,7 @@ private:
                     if (std::cin >> amount) {
                         user_->depositCash(amount);
                     } else {
-                        std::cout << "\n❌ Invalid amount!\n";
+                        std::cout << "\n Invalid amount!\n";
                     }
                     clearInputBuffer();
                     pauseScreen();
@@ -342,11 +333,11 @@ private:
                     return;
                 }
                 case 8: {
-                    std::cout << "\n👋 Thank you for using our ATM. Goodbye!\n";
+                    std::cout << "\n Thank you for using our ATM. Goodbye!\n";
                     return;
                 }
                 default: {
-                    std::cout << "\n❌ Invalid choice! Please select 1-8.\n";
+                    std::cout << "\n Invalid choice! Please select 1-8.\n";
                     pauseScreen();
                     break;
                 }
@@ -376,7 +367,7 @@ public:
                         user_->unlockAccount();
                         continue;
                     } else {
-                        std::cout << "\n👋 Goodbye!\n";
+                        std::cout << "\n Goodbye!\n";
                         break;
                     }
                 }
@@ -393,7 +384,7 @@ public:
             clearInputBuffer();
 
             if (continue_session != 'y' && continue_session != 'Y') {
-                std::cout << "\n👋 Thank you for using our ATM. Goodbye!\n";
+                std::cout << "\n Thank you for using our ATM. Goodbye!\n";
                 break;
             }
         }

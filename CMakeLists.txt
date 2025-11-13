@@ -3,4 +3,4 @@ project(ATM)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(ATM main.cpp)
+add_executable(ATM ATM_core.cpp)
